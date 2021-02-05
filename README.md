@@ -25,4 +25,4 @@ poetry add beautifulsoup4
 > E.g. Citation needed for “lorem spam and impsum eggs”
 > Consider the “relevant passage” to be the parent element that contains the passage, often a paragraph element.
 
-## [PR Link for Submission]()
+## [PR Link for Submission](https://github.com/NyxofDarkness/web_scraper/pull/1)
