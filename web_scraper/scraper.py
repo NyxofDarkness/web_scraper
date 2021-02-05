@@ -4,36 +4,30 @@ from bs4 import BeautifulSoup
 assert requests
 assert BeautifulSoup
 
-url = ""
+url = "https://en.wikipedia.org/wiki/Saudi_Arabian-led_intervention_in_Yemen"
 
-def get_soup(url):
+
+def get_citations_needed_count(url):
+
     response = requests.get(url)
     content = response.content
     soup = BeautifulSoup(content, 'html.parser')
-    return soup
-
-def get_citations_needed_count(url):
-    soup = get_soup(url)
-    results = soup.find_all('a', title = 'Wikipedia:Citation needed')
-    count = len(results)
-    print("Citations needed: ", count)
-    return count
-
-get_citations_needed_count(url)
-
-counter = get_citations_needed_count('###')
+    result = soup.find(id = 'mw-content-text')
+    citation_count = result.find_all('a', title="Wikipedia:Citation needed" )
+    return len(citation_count)
 
 def get_citations_needed_report(url):
-    text = ""
-    soup = get_soup(url)
-    counter = get_citations_needed_count(url)
-    results_count = f"Citations needed: {counter}"
-    results = soup.find_all(class_='noprint Inline-Template-Fact')
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    citation_count = soup.find_all('a', title="Wikipedia:Citation needed")
+    text = []
+    show_text = ''
+    for text_break in citation_count:
+        text.append(text_break.find_parents('p')[0].text.strip())
+  
+    for i in text:
+        show_text += f'citation needed for: {i}'
+    return show_text
 
-    for i in results:
-        p = i.find_parent('p')
-        text += p.text.strip()
-        text += '\n'*2
-
-    print(text, results_count)
-    return text
+print(get_citations_needed_count(url))
+print(get_citations_needed_report(url))
